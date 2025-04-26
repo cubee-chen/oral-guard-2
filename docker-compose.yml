@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     build:
@@ -23,25 +21,20 @@ services:
       - ./backend:/app
       - /app/node_modules
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/dental-care
+      # 指向 Atlas 的 URI
+      - MONGODB_URI=mongodb+srv://cubee0405:YU9ck80IEOtu3cpk@cluster0.xmzcrfk.mongodb.net/oral-guard?retryWrites=true&w=majority&appName=Cluster0
       - FRONTEND_URL=http://localhost:5173
       - ML_API_URL=http://ml-service:8000/predict
+    # 只依赖 ml-service，不再依赖本地 mongodb
     depends_on:
-      - mongodb
       - ml-service
-
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    environment:
-      - MONGO_INITDB_DATABASE=dental-care
 
   ml-service:
     build:
       context: ./ml-service
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     ports:
       - "8000:8000"
     volumes:
@@ -49,5 +42,4 @@ services:
       - model_data:/app/models
 
 volumes:
-  mongodb_data:
   model_data:

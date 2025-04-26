@@ -1,6 +1,6 @@
-const User = require('../models/User');
-const Upload = require('../models/Upload');
-const Record = require('../models/Record');
+const User = require('../models/user.model.js');
+const Upload = require('../models/upload.model.js');
+const Record = require('../models/record.model.js');
 
 // Get patient's own profile
 exports.getProfile = async (req, res, next) => {

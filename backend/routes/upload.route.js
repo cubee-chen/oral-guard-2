@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const uploadController = require('../controllers/uploadController');
+const uploadController = require('../controllers/upload.controller.js');
 const ensureAuthenticated = require('../middleware/ensureAuthenticated');
 
 // All routes require authentication

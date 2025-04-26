@@ -1,7 +1,7 @@
-const User = require('../models/User');
-const Upload = require('../models/Upload');
-const Comment = require('../models/Comment');
-const Record = require('../models/Record');
+const User = require('../models/user.model.js');
+const Upload = require('../models/upload.model.js');
+const Comment = require('../models/comment.model.js');
+const Record = require('../models/record.model.js');
 const mongoose = require('mongoose');
 
 // Get all patients for a dentist

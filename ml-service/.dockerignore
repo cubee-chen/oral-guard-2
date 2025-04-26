@@ -1,0 +1,10 @@
+# 忽略模型目录（如果你要在运行时再挂载模型到容器里）
+models/
+
+# 忽略 Python 缓存
+__pycache__/
+*.py[cod]
+
+# 忽略编辑器或 IDE 文件
+.vscode/
+*.swp

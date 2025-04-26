@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const multer = require('multer');
 const { gridFSBucket } = require('../config/db');
-const Upload = require('../models/Upload');
-const Record = require('../models/Record');
+const Upload = require('../models/upload.model.js');
+const Record = require('../models/record.model.js');
 const mlService = require('../services/mlService');
 const { Readable } = require('stream');
 

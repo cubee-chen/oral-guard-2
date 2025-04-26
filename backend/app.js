@@ -8,10 +8,10 @@ const MongoStore = require('connect-mongo');
 require('dotenv').config();
 
 // Import routes
-const authRoutes = require('./routes/auth');
-const dentistRoutes = require('./routes/dentist');
-const patientRoutes = require('./routes/patient');
-const uploadRoutes = require('./routes/upload');
+const authRoutes = require('./routes/auth.route.js');
+const dentistRoutes = require('./routes/dentist.route.js');
+const patientRoutes = require('./routes/patient.route.js');
+const uploadRoutes = require('./routes/upload.route.js');
 
 // Import passport config
 require('./config/passport');
@@ -49,6 +49,9 @@ app.use(session({
 // Initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Debugging line
+app.get('/', (req, res) => res.send('🏥 backend is alive'))
 
 // API Routes
 app.use('/api/auth', authRoutes);

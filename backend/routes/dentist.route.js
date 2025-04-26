@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const dentistController = require('../controllers/dentistController');
+const dentistController = require('../controllers/dentist.controller.js');
 const ensureAuthenticated = require('../middleware/ensureAuthenticated');
 
 // All routes require authentication

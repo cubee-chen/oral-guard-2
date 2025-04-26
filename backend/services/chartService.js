@@ -1,4 +1,4 @@
-const Record = require('../models/Record');
+const Record = require('../models/record.model.js');
 
 // Generate time series data for charts
 exports.generateTimeSeriesData = async (patientId) => {
