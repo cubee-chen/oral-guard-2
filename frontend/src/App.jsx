@@ -7,7 +7,6 @@ import DentistDashboard from './pages/DentistDashboard';
 import PatientDashboard from './pages/PatientDashboard';
 import PatientUpload from './pages/PatientUpload';
 import LoadingSpinner from './components/common/LoadingSpinner';
-import './styles/App.css';
 
 // Protected route component
 const ProtectedRoute = ({ children, requiredRole }) => {
