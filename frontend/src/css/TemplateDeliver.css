@@ -1,0 +1,246 @@
+/* 整體容器 */
+.product-deliver-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f4f7f6;
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.5s ease; /* Smooth shift effect */
+}
+
+.shift-right {
+  transform: translateX(-150px);
+}
+  
+  /* 主要標題 */
+  .title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 13px;
+  }
+  
+  /* 內容框 */
+  .content-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 100%;
+  }
+  
+  /* 副標題 */
+  .subtitle {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  /* 購買按鈕 */
+  .purchase-button {
+    background-color: #6b996c;
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background 0.3s;
+
+}
+  
+  .purchase-button:hover {
+    background-color: #002a13;
+  }
+  
+  /* 已購買訊息 */
+  .purchased-message {
+    margin-top: 15px;
+  }
+  
+  /* 成功訊息 */
+  .success-message {
+    font-size: 16px;
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  /* Notion 連結 */
+  .notion-link {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  .notion-link:hover {
+    text-decoration: underline;
+    color: #007bff;
+  }
+  
+  /* 登入提醒 */
+  .login-message {
+    font-size: 18px;
+    color: #dc3545;
+    font-weight: bold;
+  }
+
+  
+  /* Email */
+  .email {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+  }
+
+  
+  /* 已購買訊息 */
+  .purchased-message {
+    margin-top: 15px;
+  }
+  
+  
+  /* 登入提醒 */
+  .login-message {
+    font-size: 18px;
+    color: #dc3545;
+    font-weight: bold;
+  }
+  .notion-info-form {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  .notion-info-form label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #002a13;
+  }
+  
+  .notion-info-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #6b996c;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+
+
+  /* --- Chat Bubble Styling --- */
+.chat-bubble {
+    position: fixed;
+    bottom: 80px;
+    right: 40px; /* Move bubble to the left */
+    max-width: 346px;
+    background: #f8f9fa;
+    color: #333;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    font-size: 15px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.3); /* Start small */
+    transform-origin: bottom left; /* Scale from button position */
+    transition: opacity 0.5s ease, transform 0.5s ease, left 0.5s ease;
+}
+
+.chat-bubble h3 {
+  color: #007bff;
+  font-weight: 600;
+}
+/* Arrow for chat bubble */
+.chat-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #f8f9fa transparent transparent transparent;
+}
+
+/* Show and expand animation */
+.show-bubble {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.show-bubble h3 {
+  color: #007bff;
+  font-weight: 600;
+}
+
+/* --- Close Button --- */
+.chat-close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.chat-close:hover {
+    color: #000;
+}
+
+.bottom-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Guide Button --- */
+.guide-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 50px;
+    margin-top: 15px;
+    margin-right: 50px;
+    transition: background 0.3s, transform 0.2s;
+    position: relative;
+}
+
+.guide-button:hover {
+    background-color: #1f78c1;
+    transform: scale(1.05);
+}
+
+/* --- Typing Effect --- */
+.typing-text {
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.typing-text p {
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.8; /* 調整行距 */
+  margin-bottom: 8px;
+}

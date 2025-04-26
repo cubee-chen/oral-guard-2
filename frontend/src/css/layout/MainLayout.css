@@ -1,0 +1,16 @@
+.main-content {
+    flex: 1;
+    padding-bottom: 70px;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+.other-page {
+  padding-top: 70px;
+}
+
+.home-page {
+  padding-top: 0;
+}

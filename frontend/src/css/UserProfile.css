@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;700&display=swap");
+
+/* Overall Layout */
+.profile-page {
+  display: flex;
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+.user-profile-container {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #fff;
+  padding-left: 80px; /* Adjust for spacing to your liking */
+}
+
+.info-section,
+.purchase-history-section,
+.payment-info-section {
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background-color: #f4f4f4;
+  padding-top: 20px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #e0e0e0;
+}
+
+.sidebar-item.selected {
+  background-color: #d6f7d1;
+  color: #146414;
+}
+
+.sidebar-item i {
+  margin-right: 10px;
+}
+
+/* Headings */
+h3,
+h4 {
+  font-family: "Orbitron", sans-serif;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 24px;
+  margin-bottom: 26px;
+  margin-left: -3px;
+}
+
+h4 {
+  font-size: 18px;
+}
+
+/* Paragraphs */
+p {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: #444;
+}
+
+/* Basic Info Section */
+.info-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.info-item-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  column-gap: 20px;
+  width: 100%;
+  margin-bottom: 13px;
+}
+
+.info-item-container p {
+  width: 290px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 550;
+  font-size: 18px;
+}
+
+/* General Input Style */
+.api-token-input {
+  width: 100%;
+  max-width: 450px;
+  padding: 8px;
+  padding-left: 15px;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Purchase History */
+.purchase-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.purchase-item {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 16px;
+  background-color: #fafafa;
+}
+
+.purchase-item h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.notion-info p {
+  margin-bottom: 6px;
+  color: #555;
+  font-family: "Poppins", sans-serif;
+}
+
+/* The container for "專案管理" editing mode */
+.notion-edit-wrapper {
+  background-color: #f9f9f9; /* Light grey background */
+  border: 1px solid #ccc;   /* Grey border */
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 10px;
+}
+
+/* Notion editing area container */
+.notion-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Inputs inside the Notion editing area */
+.notion-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 450px;
+  margin-bottom: 12px;
+}
+
+.notion-input-container input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button {
+  font-family: "Poppins", sans-serif;
+  background-color: #146414;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #0e4e0e;
+}
+
+/* Reusable row for the bottom-right aligned buttons */
+.token-button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+/* For "取消/確認" or "編輯" side by side */
+.info-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Container for input + eye icon in Basic Info (API token) */
+.token-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 450px;
+}
+
+.token-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+/* Eye Icon Button (no background on hover) */
+.toggle-visibility-button {
+  position: absolute;
+  right: 0;
+  background-color: transparent !important;
+  border: none !important;
+  font-size: 20px;
+  color: #444;
+  cursor: pointer;
+  outline: none; /* no focus outline */
+}
+
+.toggle-visibility-button:hover {
+  background-color: transparent !important;
+  color: #0e4e0e;
+}
+
+.toggle-visibility-button:focus {
+  outline: none;
+  box-shadow: none;
+}

@@ -1,0 +1,116 @@
+/* Version One */
+
+.template-container {
+  display: flex;
+  align-items: center; /* Aligns items vertically */
+  justify-content: space-between; /* Adjusts spacing */
+  gap: 20px; /* Adds spacing between elements */
+  padding: 5%;
+}
+
+.template-buy-container {
+  flex: 1;
+  text-align: center; /* Centers text */
+  max-width: fit-content;
+  margin: 40px 40px 40px;
+}
+
+.template-intro-container {
+  flex: 1; /* Takes up equal space */
+  background-color: lightgray; 
+  /* height: 300px; */
+  aspect-ratio: 16 / 9;
+  padding: 60px 20px;
+  /* max-width: 800px; */
+  margin: 40px auto 40px; /* leave extra top margin so header doesn't cover content */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+
+.intro-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #002a13;
+}
+  
+.intro-buy-button {
+  background-color: #6b996c;
+  color: white;
+  border: none;
+  padding: 16px;
+  margin-top: 24px;
+  font-size: 16px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+  
+.intro-buy-button:hover {
+  background-color: #002a13;
+}
+
+.intro-back-link {
+  display: block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #002a13;
+  font-weight: bold;
+}
+
+/* Version Two */
+
+.template-intro-container-v2 {
+  position: relative;
+  flex: 1; /* Takes up equal space */
+  background-color: lightgray; 
+  margin: 0px; /* leave extra top margin so header doesn't cover content */
+  border-radius: 10px;
+  margin-bottom: -70px;
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+}
+
+.template-buy-container-v2 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding-top: 50%;
+}
+
+.button-shield-v2 {
+  background-color: rgb(233, 232, 233);
+  width: 52.5%;
+  height: 8%;
+  padding-left: 3.5%;
+  padding-right: 3.5%;
+  padding-top: 2%;
+  text-align: center;
+}
+  
+.intro-buy-button-v2 {
+  /* background-color: #6b996c; */
+  background-color: #123d6c;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 16px;
+  font-size: 24px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+  
+.intro-buy-button-v2:hover {
+  background-color: rgb(213, 218, 222);
+  color: #123d6c;
+}
+
+.intro-back-link-v2 {
+  display: block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #002a13;
+  font-weight: bold;
+}
