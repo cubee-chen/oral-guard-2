@@ -1,44 +1,98 @@
-import "../css/Login.css";
-import GoogleLogo from "../assets/google-icon.svg";
-import { useEffect } from "react";
+// src/pages/Login.jsx
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import '../styles/pages/Auth.css';
 
-function Login() {
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth endpoint
-    window.location.href = `${
-      import.meta.env.VITE_API_BASE_URL
-    }/api/auth/google`;
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { login, isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  if (isAuthenticated) {
+    navigate(user.role === 'dentist' ? '/dentist/dashboard' : '/patient/dashboard');
+    return null;
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormError('');
+    
+    if (!email || !password) {
+      setFormError('Please enter both email and password');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await login(email, password);
+      // Navigate based on user role
+      if (user?.role === 'dentist') {
+        navigate('/dentist/dashboard');
+      } else {
+        navigate('/patient/dashboard');
+      }
+    } catch (err) {
+      setFormError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  useEffect(() => {
-    // CRM Update
-    fetch(`${API_BASE_URL}/api/crm/update`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: "randomPerson",
-        crmKey: "loginPage.viewTime",
-        crmValue: new Date().getTime(),
-      }),
-    });
-  }, [API_BASE_URL]);
-
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>登入</h2>
-        <button onClick={handleGoogleLogin} className="google-button">
-          <img
-            src={ GoogleLogo }
-            alt="Google Logo"
-            className="google-icon"
-          />
-          <span>使用 Google 帳號登入</span>
-        </button>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Dental Care Login</h2>
+        <p className="auth-subtitle">Sign in to access your account</p>
+        
+        {formError && <div className="error-message">{formError}</div>}
+        
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              disabled={isSubmitting}
+            />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              disabled={isSubmitting}
+            />
+          </div>
+          
+          <button 
+            type="submit" 
+            className="auth-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? <LoadingSpinner /> : 'Login'}
+          </button>
+        </form>
+        
+        <div className="auth-footer">
+          Don't have an account? <Link to="/register">Register</Link>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

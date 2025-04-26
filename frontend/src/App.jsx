@@ -1,59 +1,85 @@
-import { Routes, Route } from "react-router-dom";
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import DentistDashboard from './pages/DentistDashboard';
+import PatientDashboard from './pages/PatientDashboard';
+import PatientUpload from './pages/PatientUpload';
+import LoadingSpinner from './components/common/LoadingSpinner';
+import './styles/App.css';
 
-import AuthLayout from "./layouts/AuthLayout";
-import MainLayout from "./layouts/MainLayout";
-import NoHeaderLayout from "./layouts/NoHeaderLayout";
+// Protected route component
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { isAuthenticated, user, loading } = useAuth();
 
-import ProtectedRoute from "./components/ProtectedRoute";
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-import Home from "./pages/Home";
-import TemplateDeliver from "./pages/TemplateDeliver";
-import AboutUs from "./pages/AboutUs";
-import Login from "./pages/Login";
-import UserProfile from "./pages/UserProfile";
-import SignupSecond from "./pages/SignupSecond";
-import TemplateIntro from "./pages/TemplateIntro";
-import NotFound from "./pages/NotFound";
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return user.role === 'dentist' 
+      ? <Navigate to="/dentist/dashboard" replace />
+      : <Navigate to="/patient/dashboard" replace />;
+  }
+
+  return children;
+};
+
+const AppRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      
+      {/* Dentist Routes */}
+      <Route 
+        path="/dentist/dashboard" 
+        element={
+          <ProtectedRoute requiredRole="dentist">
+            <DentistDashboard />
+          </ProtectedRoute>
+        } 
+      />
+      
+      {/* Patient Routes */}
+      <Route 
+        path="/patient/dashboard" 
+        element={
+          <ProtectedRoute requiredRole="patient">
+            <PatientDashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/patient/upload" 
+        element={
+          <ProtectedRoute requiredRole="patient">
+            <PatientUpload />
+          </ProtectedRoute>
+        } 
+      />
+      
+      {/* Catch-all route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
 
 function App() {
   return (
-    <Routes>
-      {/* 1) Auth pages: uses AuthLayout */}
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup-second" element={<SignupSecond />} />
-      </Route>
-
-      {/* 2) Main layout: has normal header/footer */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/template-intro" element={<TemplateIntro />} />
-
-        {/* Protected pages */}
-        <Route
-          path="/user-profile"
-          element={
-            <ProtectedRoute>
-              <UserProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/template-deliver"
-          element={
-            <ProtectedRoute>
-              <TemplateDeliver />
-            </ProtectedRoute>
-          }
-        />
-      </Route>
-
-      {/* 3) No header/footer for 404 */}
-      <Route element={<NoHeaderLayout />}>
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <Router>
+      <AuthProvider>
+        <div className="app">
+          <AppRoutes />
+        </div>
+      </AuthProvider>
+    </Router>
   );
 }
 
