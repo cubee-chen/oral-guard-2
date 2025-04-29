@@ -1,4 +1,4 @@
-const passport = require('passport');
+const { signToken } = require('../config/auth.js');
 const User = require('../models/user.model.js');
 
 // Register a new user
@@ -51,41 +51,48 @@ exports.register = async (req, res, next) => {
 };
 
 // Login user
-exports.login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    
+exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    /* 1. 先把密碼一起撈出來（因為 schema 裡 password select:false） */
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(401).json({ message: info.message || 'Authentication failed' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
-    
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-      
-      // Return user without password
-      const userObject = user.toObject();
-      delete userObject.password;
-      
-      return res.status(200).json({
-        message: 'Logged in successfully',
-        user: userObject
-      });
-    });
-  })(req, res, next);
+
+    /* 2. 比對密碼 */
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    /* 3. 產生 JWT */
+    const token = signToken(user);
+
+    /* 4. 回傳（先把密碼拿掉） */
+    const userData = user.toObject();
+    delete userData.password;
+
+    res
+      .cookie('oralguard_token', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: true,
+        maxAge: 60 * 60 * 1000 // 1h
+      })
+      .status(200)
+      .json({ user: userData });
+
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Logout user
 exports.logout = (req, res) => {
-  req.logout(function(err) {
-    if (err) {
-      return res.status(500).json({ message: 'Error logging out' });
-    }
-    res.status(200).json({ message: 'Logged out successfully' });
-  });
+  res.clearCookie('oralguard_token', { sameSite: 'none', secure:true });
+  res.status(200).json({ messsage: 'Logged out' });
 };
 
 // Get current user

@@ -1,5 +1,5 @@
 // src/pages/Login.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -15,10 +15,13 @@ const Login = () => {
   const navigate = useNavigate();
 
   // Redirect if already logged in
-  if (isAuthenticated) {
-    navigate(user.role === 'dentist' ? '/dentist/dashboard' : '/patient/dashboard');
-    return null;
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(user.role === 'dentist' ? '/dentist/dashboard' : '/patient/dashboard');
+    }
+  }, [isAuthenticated, user, navigate])
+
+  if (isAuthenticated) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,5 +1,6 @@
 // components/patient/UploadHistory.jsx
 import React, { useState } from 'react';
+import { API_HOST } from '../../utils/apiHost';
 
 const UploadHistory = ({ uploads }) => {
   const [selectedUpload, setSelectedUpload] = useState(uploads[0] || null);
@@ -14,9 +15,7 @@ const UploadHistory = ({ uploads }) => {
     });
   };
 
-  const getImageUrl = (imageId) => {
-    return `/api/upload/image/${imageId}`;
-  };
+  const getImageUrl = (id) => `${API_HOST}/api/upload/image/${id}`;
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -45,6 +44,12 @@ const UploadHistory = ({ uploads }) => {
           </span>
         );
     }
+  };
+
+  const handleToggle = (upload) => {
+    setSelectedUpload(prev => 
+      prev && prev._id === upload._id ? null : upload
+    );
   };
 
   return (
@@ -105,10 +110,12 @@ const UploadHistory = ({ uploads }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
-                    onClick={() => setSelectedUpload(upload)}
+                    onClick={() => handleToggle(upload)}
                     className="text-blue-600 hover:text-blue-900"
                   >
-                    View
+                    {
+                      selectedUpload?._id === upload._id ? 'Hide' : 'View'
+                    }
                   </button>
                 </td>
               </tr>
@@ -129,7 +136,7 @@ const UploadHistory = ({ uploads }) => {
             <div>
               <h4 className="font-medium mb-2">Left Profile</h4>
               <img
-                src={getImageUrl(selectedUpload.processedLeftImage || selectedUpload.leftProfileImage)}
+                src={selectedUpload.processedLeftImage ? getImageUrl(selectedUpload.processedLeftImage) : '/placeholder_processing.png'}
                 alt="Left profile"
                 className="w-full rounded border"
               />
@@ -137,7 +144,7 @@ const UploadHistory = ({ uploads }) => {
             <div>
               <h4 className="font-medium mb-2">Front View</h4>
               <img
-                src={getImageUrl(selectedUpload.processedFrontalImage || selectedUpload.frontalImage)}
+                src={selectedUpload.processedFrontalImage ? getImageUrl(selectedUpload.processedFrontalImage) : '/placeholder_processing.png'}
                 alt="Front view"
                 className="w-full rounded border"
               />
@@ -145,7 +152,7 @@ const UploadHistory = ({ uploads }) => {
             <div>
               <h4 className="font-medium mb-2">Right Profile</h4>
               <img
-                src={getImageUrl(selectedUpload.processedRightImage || selectedUpload.rightProfileImage)}
+                src={selectedUpload.processedRightImage ? getImageUrl(selectedUpload.processedRightImage) : '/placeholder_processing.png'}
                 alt="Right profile"
                 className="w-full rounded border"
               />

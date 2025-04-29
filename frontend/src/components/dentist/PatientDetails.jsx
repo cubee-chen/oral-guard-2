@@ -1,6 +1,7 @@
 // components/dentist/PatientDetails.jsx
 import React, { useState } from 'react';
 import PatientRecordChart from '../common/PatientRecordChart';
+import { API_HOST } from '../../utils/apiHost';
 
 const PatientDetails = ({ patient, uploads, record, onAddComment }) => {
   const [selectedUpload, setSelectedUpload] = useState(uploads.length > 0 ? uploads[0] : null);
@@ -14,9 +15,7 @@ const PatientDetails = ({ patient, uploads, record, onAddComment }) => {
     }
   };
 
-  const getImageUrl = (imageId) => {
-    return `/api/upload/image/${imageId}`;
-  };
+  const getImageUrl = (id) => `${API_HOST}/api/upload/image/${id}`;
 
   return (
     <div>
@@ -40,7 +39,7 @@ const PatientDetails = ({ patient, uploads, record, onAddComment }) => {
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h3 className="text-xl font-semibold mb-4">Oral Health Progress</h3>
         {record && record.entries.length > 0 ? (
-          <PatientRecordChart record={record} />
+          <PatientRecordChart recordData={record} />
         ) : (
           <div className="bg-gray-100 p-4 rounded text-center">
             <p className="text-gray-500">No data available for this patient yet.</p>

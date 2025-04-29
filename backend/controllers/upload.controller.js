@@ -46,7 +46,7 @@ exports.processUpload = async (req, res, next) => {
         const uploadStream = bucket.openUploadStream(file.originalname, {
           contentType: file.mimetype,
           metadata: {
-            patientId: req.user._id.toString(),
+            patientId: req.user.id,
             uploadDate: new Date()
           }
         });
@@ -70,7 +70,7 @@ exports.processUpload = async (req, res, next) => {
     
     // Create new upload record
     const newUpload = new Upload({
-      patient: req.user._id,
+      patient: req.user.id,
       leftProfileImage: leftProfileImageId,
       frontalImage: frontalImageId,
       rightProfileImage: rightProfileImageId,
@@ -103,10 +103,7 @@ exports.getImage = async (req, res, next) => {
   try {
     const { imageId } = req.params;
     
-    // Verify user is authenticated
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
+    // authentication already handled by ensureAuthenticated middleware
     
     // Get the image file
     const bucket = gridFSBucket();
@@ -120,7 +117,7 @@ exports.getImage = async (req, res, next) => {
     
     // For patients, verify they own the image
     if (req.user.role === 'patient') {
-      if (file.metadata && file.metadata.patientId !== req.user._id.toString()) {
+      if (file.metadata && file.metadata.patientId !== req.user.id) {
         return res.status(403).json({ message: 'Unauthorized. This image does not belong to you.' });
       }
     }
@@ -130,7 +127,7 @@ exports.getImage = async (req, res, next) => {
       if (file.metadata && file.metadata.patientId) {
         const patient = await mongoose.model('User').findOne({
           _id: file.metadata.patientId,
-          dentist: req.user._id
+          dentist: req.user.id
         });
         
         if (!patient) {
@@ -171,7 +168,7 @@ exports.getUploadStatus = async (req, res, next) => {
     }
     
     // For patients, verify they own the upload
-    if (req.user.role === 'patient' && upload.patient.toString() !== req.user._id.toString()) {
+    if (req.user.role === 'patient' && upload.patient.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Unauthorized. This upload does not belong to you.' });
     }
     
@@ -179,7 +176,7 @@ exports.getUploadStatus = async (req, res, next) => {
     if (req.user.role === 'dentist') {
       const patient = await mongoose.model('User').findOne({
         _id: upload.patient,
-        dentist: req.user._id
+        dentist: req.user.id
       });
       
       if (!patient) {

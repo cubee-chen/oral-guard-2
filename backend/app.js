@@ -1,20 +1,15 @@
+require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-const passport = require('passport');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-require('dotenv').config();
+const cookieParser = require('cookie-parser');
 
 // Import routes
 const authRoutes = require('./routes/auth.route.js');
 const dentistRoutes = require('./routes/dentist.route.js');
 const patientRoutes = require('./routes/patient.route.js');
-const uploadRoutes = require('./routes/upload.route.js');
 
-// Import passport config
-require('./config/passport');
+const uploadRoutes = require('./routes/upload.route.js');
 
 // Initialize app
 const app = express();
@@ -31,24 +26,7 @@ app.use(cors({
   credentials: true
 }));
 
-// Session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'dental-care-secret',
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({ 
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/dental-care',
-    ttl: 14 * 24 * 60 * 60 // 14 days
-  }),
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days
-  }
-}));
-
-// Initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(cookieParser());
 
 // Debugging line
 app.get('/', (req, res) => res.send('🏥 backend is alive'))

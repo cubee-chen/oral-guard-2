@@ -1,12 +1,10 @@
 // src/services/api.js
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  withCredentials: true
 });
 
 // Response interceptor for handling errors globally

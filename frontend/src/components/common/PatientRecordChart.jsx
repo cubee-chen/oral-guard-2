@@ -2,7 +2,8 @@
 import { Line } from 'react-chartjs-2';
 import { 
   Chart as ChartJS, 
-  CategoryScale, 
+  CategoryScale,
+  TimeScale,
   LinearScale, 
   PointElement, 
   LineElement, 
@@ -10,11 +11,13 @@ import {
   Tooltip, 
   Legend 
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import '../../styles/components/PatientRecordChart.css';
 
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
+  TimeScale,
   LinearScale,
   PointElement,
   LineElement,
@@ -102,10 +105,12 @@ const PatientRecordChart = ({ recordData }) => {
         }
       },
       x: {
-        title: {
-          display: true,
-          text: 'Date'
-        }
+          type: 'time',
+          time: { unit: 'day' },
+          title: {
+            display: true,
+            text: 'Date'
+          }
       }
     }
   };

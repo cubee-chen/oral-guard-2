@@ -31,9 +31,9 @@ async def predict(image: UploadFile = File(...)):
     
     # Calculate metrics (this is a placeholder - you'd implement your actual logic)
     # In a real app, you'd extract dental-specific metrics from the detection results
-    plaque_coverage = 0.35  # Example value between 0-1
-    gingival_inflammation = 0.20  # Example value between 0-1
-    tartar = 0.15  # Example value between 0-1
+    plaque_coverage = 30  # Example value between 0-1
+    gingival_inflammation = 50  # Example value between 0-1
+    tartar = 70  # Example value between 0-1
     
     # Convert processed image to bytes
     is_success, buffer = cv2.imencode(".jpg", result_image)
@@ -44,5 +44,5 @@ async def predict(image: UploadFile = File(...)):
     response.headers["X-Plaque-Coverage"] = str(plaque_coverage)
     response.headers["X-Gingival-Inflammation"] = str(gingival_inflammation)
     response.headers["X-Tartar"] = str(tartar)
-    
+    print('test')
     return response

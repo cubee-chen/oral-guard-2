@@ -1,45 +1,46 @@
 import React from 'react';
+import {Link } from 'react-router-dom';
 
-const PatientList = ({ patients, selectedPatient, onPatientSelect, onRemovePatient }) => {
-  return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      {patients.length === 0 ? (
-        <div className="p-4 text-center text-gray-500">
-          No patients available. Add your first patient.
-        </div>
-      ) : (
-        <ul className="divide-y divide-gray-200">
-          {patients.map(patient => (
-            <li 
-              key={patient._id}
-              className={`p-4 hover:bg-gray-50 cursor-pointer flex justify-between items-center ${
-                selectedPatient && selectedPatient._id === patient._id ? 'bg-blue-50' : ''
+const PatientList = ({ patients, selectedPatient, onRemovePatient }) => (
+  <div className="bg-white rounded-lg shadow overflow-hidden">
+    {patients.length === 0 ? (
+      <div className="p-4 text-center text-gray-500">No patients available.</div>
+    ) : (
+      <ul className="divide-y divide-gray-200">
+        {patients.map((p) => (
+          <li key={p._id} className="p-0">
+            <Link
+              to={`/dentist/patients/${p._id}`}
+              className={`flex justify-between items-center p-4 hover:bg-gray-50 ${
+                selectedPatient?._id === p._id ? 'bg-blue-50' : ''
               }`}
-              onClick={() => onPatientSelect(patient)}
             >
               <div>
                 <h3 className="font-medium">
-                  {patient.firstName} {patient.lastName}
+                  {p.firstName} {p.lastName}
                 </h3>
-                <p className="text-sm text-gray-500">{patient.email}</p>
+                <p className="text-sm text-gray-500">{p.email}</p>
               </div>
-              <button 
-                className="text-red-500 hover:text-red-700"
+
+              {/* “Remove” button needs to stop link navigation */}
+              <button
                 onClick={(e) => {
+                  e.preventDefault();           // block <Link> navigation
                   e.stopPropagation();
-                  if (window.confirm(`Remove ${patient.firstName} ${patient.lastName} from your patients?`)) {
-                    onRemovePatient(patient._id);
+                  if (window.confirm(`Remove ${p.firstName}?`)) {
+                    onRemovePatient(p._id);
                   }
                 }}
+                className="text-red-500 hover:text-red-700"
               >
                 Remove
               </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-};
+            </Link>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+);
 
 export default PatientList;

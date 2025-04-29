@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const SALT_ROUNDS = 10;
+
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -11,7 +13,8 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    select: false
   },
   firstName: {
     type: String,
@@ -25,7 +28,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['dentist', 'patient'],
+    enum: ['dentist', 'patient', 'admin'],
     required: true
   },
   // Fields specific to dentists
@@ -74,21 +77,15 @@ UserSchema.pre('save', function(next) {
 });
 
 // Hash password before saving
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
+  this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
+  next();
 });
 
-// Method to validate password
-UserSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+/** instance method：用來比對輸入密碼 */
+UserSchema.methods.comparePassword = function (plain) {
+  return bcrypt.compare(plain, this.password);
 };
 
 module.exports = mongoose.model('User', UserSchema);

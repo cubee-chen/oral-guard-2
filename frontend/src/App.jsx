@@ -7,7 +7,8 @@ import DentistDashboard from './pages/DentistDashboard';
 import PatientDashboard from './pages/PatientDashboard';
 import PatientUpload from './pages/PatientUpload';
 import LoadingSpinner from './components/common/LoadingSpinner';
-
+import Navbar from './components/common/Navbar';
+import PatientDetailsPage from './pages/PatientDetailsPage';
 // Protected route component
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { isAuthenticated, user, loading } = useAuth();
@@ -45,6 +46,14 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
+      <Route
+        path="/dentist/patients/:patientId"
+        element={
+          <ProtectedRoute requiredRole="dentist">
+            <PatientDetailsPage />
+          </ProtectedRoute>
+        }
+      />
       
       {/* Patient Routes */}
       <Route 
@@ -74,6 +83,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        <Navbar />
         <div className="app">
           <AppRoutes />
         </div>

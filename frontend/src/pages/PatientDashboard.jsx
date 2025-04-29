@@ -45,6 +45,16 @@ const PatientDashboard = () => {
     fetchPatientData();
   }, [navigate]);
 
+  const chartData = React.useMemo(()=>{
+    if(!record || !record.entries.length) return null;
+    return {
+      dates:                record.entries.map(e=>e.date),
+      plaqueCoverage:       record.entries.map(e=>e.plaqueCoverage*100), // % scale
+      gingivalInflammation: record.entries.map(e=>e.gingivalInflammation*100),
+      tartar:               record.entries.map(e=>e.tartar*100)
+    };
+  }, [record]);
+
   if (loading && !profile) {
     return <LoadingSpinner />;
   }
@@ -102,8 +112,8 @@ const PatientDashboard = () => {
         {/* Oral Health Record Chart */}
         <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Oral Health Status</h2>
-          {record && record.entries.length > 0 ? (
-            <PatientRecordChart record={record} />
+          {chartData ? (
+            <PatientRecordChart recordData={chartData} />
           ) : (
             <div className="bg-gray-100 p-6 rounded text-center">
               <p className="text-gray-500">
