@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PatientRecordChart from '../components/common/PatientRecordChart';
@@ -126,12 +126,12 @@ const DentistDashboard = () => {
         <div className="w-full md:w-1/3">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Patients</h2>
-            <button
+            <Link 
+              to="/dentist/add-new-patient"
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-              onClick={() => setShowAddPatientModal(true)}
             >
               Add Patient
-            </button>
+            </Link>
           </div>
           
           <PatientList 

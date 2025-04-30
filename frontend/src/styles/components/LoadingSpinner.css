@@ -35,6 +35,8 @@
     }
   }
   
+  svg.animate-spin { animation: spin 1s linear infinite; }
+
   /* For buttons or other inline contexts */
   button .spinner {
     width: 20px;
@@ -42,3 +44,5 @@
     border-width: 2px;
     margin: 0 auto;
   }
+
+  

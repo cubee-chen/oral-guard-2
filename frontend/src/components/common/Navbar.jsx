@@ -32,7 +32,12 @@ const Navbar = () => {
           )}
           
           <div className="user-info">
-            <span>{user.firstName} {user.lastName}</span>
+            {/* click-able name */}
+            {isPatient ? (
+              <Link to="/patient/profile" className="user-name">{user.firstName} {user.lastName}</Link>
+            ) : (
+              <span className="user-name">{user.firstName} {user.lastName}</span>
+            )}
             <button onClick={handleLogout} className="logout-btn">Logout</button>
           </div>
         </div>

@@ -8,6 +8,8 @@ router.post('/register', authController.register);
 
 // Login user
 router.post('/login', authController.login);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password/:token', authController.resetPassword);
 
 // Logout user
 router.post('/logout', ensureAuthenticated, authController.logout);

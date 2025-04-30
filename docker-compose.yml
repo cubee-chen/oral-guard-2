@@ -23,12 +23,13 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    environment:
-      # 指向 Atlas 的 URI
-      - MONGODB_URI=mongodb+srv://cubee0405:YU9ck80IEOtu3cpk@cluster0.xmzcrfk.mongodb.net/oral-guard?retryWrites=true&w=majority&appName=Cluster0
-      - FRONTEND_URL=http://localhost:5173
-      - ML_API_URL=http://ml-service:8000/predict
-    # 只依赖 ml-service，不再依赖本地 mongodb
+    # environment:
+    #   # 指向 Atlas 的 URI
+    #   - MONGODB_URI=mongodb+srv://cubee0405:YU9ck80IEOtu3cpk@cluster0.xmzcrfk.mongodb.net/oral-guard?retryWrites=true&w=majority&appName=Cluster0
+    #   - FRONTEND_URL=http://localhost:5173
+    #   - ML_API_URL=http://ml-service:8000/predict
+    env_file:
+      - .env
     depends_on:
       - ml-service
 

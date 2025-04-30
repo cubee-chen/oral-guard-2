@@ -69,36 +69,7 @@ const PatientDashboard = () => {
         </div>
       )}
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Patient Info Card */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">My Information</h2>
-          {profile && (
-            <div>
-              <p className="mb-2">
-                <span className="font-semibold">Name:</span> {profile.firstName} {profile.lastName}
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Email:</span> {profile.email}
-              </p>
-              {profile.dateOfBirth && (
-                <p className="mb-2">
-                  <span className="font-semibold">Date of Birth:</span> {new Date(profile.dateOfBirth).toLocaleDateString()}
-                </p>
-              )}
-              {profile.dentist && (
-                <div className="mt-4 pt-4 border-t">
-                  <h3 className="font-semibold mb-2">My Dentist</h3>
-                  <p>Dr. {profile.dentist.firstName} {profile.dentist.lastName}</p>
-                  <p className="text-sm text-gray-600">{profile.dentist.email}</p>
-                  {profile.dentist.specialization && (
-                    <p className="text-sm text-gray-600">Specialization: {profile.dentist.specialization}</p>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-          
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">       
           <div className="mt-6">
             <Link 
               to="/patient/upload"
@@ -137,10 +108,7 @@ const PatientDashboard = () => {
           )}
         </div>
       </div>
-      
-      {loading && <LoadingSpinner overlay />}
-    </div>
-  );
+  )
 };
 
 export default PatientDashboard;

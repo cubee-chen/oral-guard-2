@@ -1,9 +1,25 @@
 // components/patient/UploadHistory.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { API_HOST } from '../../utils/apiHost';
 
 const UploadHistory = ({ uploads }) => {
   const [selectedUpload, setSelectedUpload] = useState(uploads[0] || null);
+  const [list, setList] = useState(uploads);
+
+  /* keep querying backend while at least one item is still working */
+  useEffect(() => {
+      const needPolling = list.some(u => ['pending','processing'].includes(u.status));
+      if (!needPolling) return;
+  
+      const id = setInterval(async () => {
+        try {
+          const { data } = await api.get('/api/patient/uploads');
+          setList(data.uploads);
+        } catch { /* ignore */ }
+      }, 3000);               // 3-second interval
+  
+      return () => clearInterval(id);
+    }, [list]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -19,6 +35,13 @@ const UploadHistory = ({ uploads }) => {
 
   const getStatusBadge = (status) => {
     switch (status) {
+      case 'processing':
+        return (
+        <span className="flex items-center gap-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+           <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="4" fill="none"/></svg>
+            Processing
+           </span>
+        );
       case 'pending':
         return (
           <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
