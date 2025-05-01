@@ -1,3 +1,4 @@
+// src/pages/DentistDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
@@ -6,6 +7,7 @@ import PatientRecordChart from '../components/common/PatientRecordChart';
 import PatientList from '../components/dentist/PatientList';
 import PatientDetails from '../components/dentist/PatientDetails';
 import AddPatientModal from '../components/dentist/AddPatientModal';
+import '../styles/pages/DentistDashboard.css';
 
 const DentistDashboard = () => {
   const [patients, setPatients] = useState([]);
@@ -113,22 +115,22 @@ const DentistDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Dentist Dashboard</h1>
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">Dentist Dashboard</h1>
       
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="alert alert-error">
           {error}
         </div>
       )}
       
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-1/3">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Patients</h2>
+      <div className="dashboard-content">
+        <div className="sidebar">
+          <div className="patient-list-header">
+            <h2 className="patient-list-title">Patients</h2>
             <Link 
               to="/dentist/add-new-patient"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+              className="add-patient-btn"
             >
               Add Patient
             </Link>
@@ -142,7 +144,7 @@ const DentistDashboard = () => {
           />
         </div>
         
-        <div className="w-full md:w-2/3">
+        <div className="main-content">
           {selectedPatient && patientDetails ? (
             <PatientDetails 
               patient={patientDetails.patient}
@@ -151,10 +153,8 @@ const DentistDashboard = () => {
               onAddComment={handleAddComment}
             />
           ) : (
-            <div className="bg-gray-100 p-8 rounded text-center">
-              <p className="text-gray-500">
-                Select a patient to view their details
-              </p>
+            <div className="patient-details-placeholder">
+              <p>Select a patient to view their details</p>
             </div>
           )}
         </div>

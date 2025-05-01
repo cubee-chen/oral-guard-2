@@ -1,5 +1,8 @@
+// src/pages/ForgotPassword.jsx
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
+import '../styles/pages/ResetPassword.css';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -20,20 +23,23 @@ const ForgotPassword = () => {
     };
     
     return (
-        <div className="auth-container">
-          <form onSubmit={handleSubmit} className="auth-card">
-            <h2 className="auth-title">Reset password</h2>
+        <div className="reset-container">
+          <div className="reset-card">
+            <h2 className="reset-title">Reset password</h2>
             {err && <div className="error-message">{err}</div>}
             {msg && <div className="success-message">{msg}</div>}
-            <input
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="form-input mb-4"
-            />
-            <button className="auth-button">Send link</button>
-          </form>
+            <form onSubmit={handleSubmit} className="reset-form">
+              <input
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                className="reset-input"
+              />
+              <button className="reset-button">Send reset link</button>
+              <Link to="/login" className="back-to-login">Back to login</Link>
+            </form>
+          </div>
         </div>
     );
 };

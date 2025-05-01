@@ -1,6 +1,8 @@
-import AddPatientForm from '../components/dentist/AddPatientModal'; // renaming is optional
+// src/pages/AddNewPatient.jsx
+import AddPatientForm from '../components/dentist/AddPatientModal';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import '../styles/components/AddPatientModal.css';
 
 const AddNewPatient = () => {
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ const AddNewPatient = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="modal-overlay">
       <AddPatientForm
         onAddPatient={handleSubmit}
         onClose={() => navigate('/dentist/dashboard')}

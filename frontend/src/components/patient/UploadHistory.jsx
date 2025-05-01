@@ -1,6 +1,7 @@
 // components/patient/UploadHistory.jsx
 import React, { useState, useEffect } from 'react';
 import { API_HOST } from '../../utils/apiHost';
+import '../../styles/pages/PatientDashboard.css';
 
 const UploadHistory = ({ uploads }) => {
   const [selectedUpload, setSelectedUpload] = useState(uploads[0] || null);
@@ -37,32 +38,32 @@ const UploadHistory = ({ uploads }) => {
     switch (status) {
       case 'processing':
         return (
-        <span className="flex items-center gap-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
-           <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" strokeWidth="4" fill="none"/></svg>
+        <span className="status-badge status-processing">
+           <svg className="animate-spin" viewBox="0 0 24 24" width="12" height="12"><circle cx="12" cy="12" r="10" strokeWidth="4" fill="none"/></svg>
             Processing
            </span>
         );
       case 'pending':
         return (
-          <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
-            Processing
+          <span className="status-badge status-pending">
+            Pending
           </span>
         );
       case 'completed':
         return (
-          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+          <span className="status-badge status-completed">
             Completed
           </span>
         );
       case 'failed':
         return (
-          <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+          <span className="status-badge status-failed">
             Failed
           </span>
         );
       default:
         return (
-          <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+          <span className="status-badge">
             Unknown
           </span>
         );
@@ -76,65 +77,41 @@ const UploadHistory = ({ uploads }) => {
   };
 
   return (
-    <div>
+    <div className="history-section">
       {/* Upload history table */}
-      <div className="overflow-x-auto mb-6">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="history-table-container">
+        <table className="history-table">
+          <thead>
             <tr>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Date
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Status
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Dentist Review
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Action
-              </th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Dentist Review</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody>
             {uploads.map((upload) => (
               <tr
                 key={upload._id}
-                className={selectedUpload?._id === upload._id ? 'bg-blue-50' : 'hover:bg-gray-50'}
+                className={selectedUpload?._id === upload._id ? 'selected' : ''}
               >
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {formatDate(upload.uploadDate)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {getStatusBadge(upload.status)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td>{formatDate(upload.uploadDate)}</td>
+                <td>{getStatusBadge(upload.status)}</td>
+                <td>
                   {upload.reviewedByDentist ? (
-                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                    <span className="status-badge status-completed">
                       Reviewed
                     </span>
                   ) : (
-                    <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                    <span className="status-badge">
                       Pending
                     </span>
                   )}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td>
                   <button
                     onClick={() => handleToggle(upload)}
-                    className="text-blue-600 hover:text-blue-900"
+                    className="view-button"
                   >
                     {
                       selectedUpload?._id === upload._id ? 'Hide' : 'View'
@@ -149,59 +126,74 @@ const UploadHistory = ({ uploads }) => {
 
       {/* Selected upload details */}
       {selectedUpload && (
-        <div className="bg-gray-50 p-4 rounded">
-          <h3 className="text-lg font-semibold mb-4">
+        <div className="upload-details">
+          <h3 className="details-header">
             Upload from {formatDate(selectedUpload.uploadDate)}
           </h3>
           
           {/* Images */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div>
-              <h4 className="font-medium mb-2">Left Profile</h4>
-              <img
-                src={selectedUpload.processedLeftImage ? getImageUrl(selectedUpload.processedLeftImage) : '/placeholder_processing.png'}
-                alt="Left profile"
-                className="w-full rounded border"
-              />
+          <div className="images-grid">
+            <div className="image-item">
+              <h4 className="image-title">Left Profile</h4>
+              <div className="image-frame">
+                {selectedUpload.processedLeftImage ? (
+                  <img
+                    src={getImageUrl(selectedUpload.processedLeftImage)}
+                    alt="Left profile"
+                  />
+                ) : (
+                  <div className="image-placeholder">Processing...</div>
+                )}
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium mb-2">Front View</h4>
-              <img
-                src={selectedUpload.processedFrontalImage ? getImageUrl(selectedUpload.processedFrontalImage) : '/placeholder_processing.png'}
-                alt="Front view"
-                className="w-full rounded border"
-              />
+            <div className="image-item">
+              <h4 className="image-title">Front View</h4>
+              <div className="image-frame">
+                {selectedUpload.processedFrontalImage ? (
+                  <img
+                    src={getImageUrl(selectedUpload.processedFrontalImage)}
+                    alt="Front view"
+                  />
+                ) : (
+                  <div className="image-placeholder">Processing...</div>
+                )}
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium mb-2">Right Profile</h4>
-              <img
-                src={selectedUpload.processedRightImage ? getImageUrl(selectedUpload.processedRightImage) : '/placeholder_processing.png'}
-                alt="Right profile"
-                className="w-full rounded border"
-              />
+            <div className="image-item">
+              <h4 className="image-title">Right Profile</h4>
+              <div className="image-frame">
+                {selectedUpload.processedRightImage ? (
+                  <img
+                    src={getImageUrl(selectedUpload.processedRightImage)}
+                    alt="Right profile"
+                  />
+                ) : (
+                  <div className="image-placeholder">Processing...</div>
+                )}
+              </div>
             </div>
           </div>
           
           {/* Analysis results */}
           {selectedUpload.status === 'completed' && selectedUpload.analysisResults && (
-            <div className="bg-white p-4 rounded mb-6 shadow-sm">
-              <h4 className="font-medium mb-3">Analysis Results</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-3 rounded shadow-sm border">
-                  <p className="text-sm text-gray-500">Plaque Coverage</p>
-                  <p className="text-lg font-medium">
+            <div className="analysis-section">
+              <h4 className="analysis-title">Analysis Results</h4>
+              <div className="metrics-grid">
+                <div className="metric-box">
+                  <p className="metric-name">Plaque Coverage</p>
+                  <p className="metric-value">
                     {selectedUpload.analysisResults.plaqueCoverage?.toFixed(1)}%
                   </p>
                 </div>
-                <div className="p-3 rounded shadow-sm border">
-                  <p className="text-sm text-gray-500">Gingival Inflammation</p>
-                  <p className="text-lg font-medium">
+                <div className="metric-box">
+                  <p className="metric-name">Gingival Inflammation</p>
+                  <p className="metric-value">
                     {selectedUpload.analysisResults.gingivalInflammation?.toFixed(1)}%
                   </p>
                 </div>
-                <div className="p-3 rounded shadow-sm border">
-                  <p className="text-sm text-gray-500">Tartar</p>
-                  <p className="text-lg font-medium">
+                <div className="metric-box">
+                  <p className="metric-name">Tartar</p>
+                  <p className="metric-value">
                     {selectedUpload.analysisResults.tartar?.toFixed(1)}%
                   </p>
                 </div>
@@ -210,18 +202,18 @@ const UploadHistory = ({ uploads }) => {
           )}
           
           {/* Dentist comment */}
-          <div className="mb-3">
-            <h4 className="font-medium mb-2">Dentist Notes</h4>
+          <div className="dentist-notes">
+            <h4 className="notes-title">Dentist Notes</h4>
             {selectedUpload.comment ? (
-              <div className="bg-white p-4 rounded border">
-                <p>{selectedUpload.comment.content}</p>
-                <p className="text-sm text-gray-500 mt-2">
+              <div className="notes-content">
+                <p className="notes-text">{selectedUpload.comment.content}</p>
+                <p className="notes-timestamp">
                   {formatDate(selectedUpload.comment.updatedAt || selectedUpload.comment.createdAt)}
                 </p>
               </div>
             ) : (
-              <div className="bg-white p-4 rounded border">
-                <p className="text-gray-500">No dentist notes available yet.</p>
+              <div className="notes-content">
+                <p className="no-notes">No dentist notes available yet.</p>
               </div>
             )}
           </div>

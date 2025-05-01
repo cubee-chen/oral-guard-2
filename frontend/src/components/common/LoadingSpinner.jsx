@@ -1,9 +1,9 @@
 // src/components/common/LoadingSpinner.jsx
 import '../../styles/components/LoadingSpinner.css';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ overlay }) => {
   return (
-    <div className="spinner-container">
+    <div className={`spinner-container ${overlay ? 'overlay' : ''}`}>
       <div className="spinner"></div>
     </div>
   );

@@ -29,7 +29,7 @@ services:
     #   - FRONTEND_URL=http://localhost:5173
     #   - ML_API_URL=http://ml-service:8000/predict
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       - ml-service
 

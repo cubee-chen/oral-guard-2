@@ -1,0 +1,241 @@
+/* src/styles/components/AddPatientModal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+    backdrop-filter: blur(2px);
+  }
+  
+  .modal-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .modal-close:hover {
+    color: var(--text-primary);
+  }
+  
+  .modal-body {
+    padding: 1.25rem;
+  }
+  
+  .error-message {
+    padding: 0.75rem 1rem;
+    background-color: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid #fed7d7;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: #fafafa;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.25);
+    background-color: white;
+  }
+  
+  .form-input::placeholder {
+    color: #a0aec0;
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-top: 1px solid var(--border);
+    background-color: #f9fafc;
+  }
+  
+  .cancel-button {
+    padding: 0.625rem 1rem;
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancel-button:hover {
+    background-color: #f7fafc;
+    color: var(--text-primary);
+  }
+  
+  .submit-button {
+    padding: 0.625rem 1rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .submit-button:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+  }
+  
+  /* Form field animations */
+  .form-group {
+    position: relative;
+  }
+  
+  .animated-label {
+    position: absolute;
+    top: 0.625rem;
+    left: 0.75rem;
+    color: #a0aec0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+  
+  .form-input:focus ~ .animated-label,
+  .form-input:not(:placeholder-shown) ~ .animated-label {
+    top: -0.5rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0 0.25rem;
+    background-color: white;
+    color: var(--primary);
+  }
+  
+  /* Date picker styles */
+  input[type="date"] {
+    appearance: none;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+  
+  /* Password field */
+  .password-field-container {
+    position: relative;
+  }
+  
+  .password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+  
+  .password-toggle:hover {
+    color: var(--text-secondary);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .modal-container {
+      max-width: 100%;
+      height: auto;
+      max-height: calc(100vh - 2rem);
+      margin: 1rem;
+    }
+    
+    .modal-header, .modal-body, .modal-footer {
+      padding: 1rem;
+    }
+    
+    .modal-footer {
+      flex-direction: column-reverse;
+    }
+    
+    .cancel-button, .submit-button {
+      width: 100%;
+      padding: 0.75rem;
+    }
+  }

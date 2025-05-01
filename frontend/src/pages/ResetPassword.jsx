@@ -1,6 +1,8 @@
+// src/pages/ResetPassword.jsx
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
+import '../styles/pages/ResetPassword.css';
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -14,35 +16,35 @@ const ResetPassword = () => {
 
     try {
       await api.post(`/api/auth/reset-password/${token}`, { password: pw });
-      setMsg('Password updated');
+      setMsg('Password updated successfully');
     } catch (e) {
-      setErr(e.response?.data?.message || 'Error');
+      setErr(e.response?.data?.message || 'Error updating password');
     }
   };
 
   return (
-    <div className="auth-container">
-      <form onSubmit={submit} className="auth-card">
-        <h2 className="auth-title">Choose a new password</h2>
+    <div className="reset-container">
+      <div className="reset-card">
+        <h2 className="reset-title">Choose a new password</h2>
         {err && <div className="error-message">{err}</div>}
         {msg ? (
           <>
             <div className="success-message">{msg}</div>
-            <Link to="/login" className="text-blue-600 underline mt-4 inline-block">Back to login</Link>
+            <Link to="/login" className="back-to-login">Back to login</Link>
           </>
         ) : (
-          <>
+          <form onSubmit={submit} className="reset-form">
             <input
               type="password"
               value={pw}
               onChange={e => setPw(e.target.value)}
-              className="form-input mb-4"
+              className="reset-input"
               placeholder="New password"
             />
-            <button className="auth-button">Save</button>
-          </>
+            <button className="reset-button">Save new password</button>
+          </form>
         )}
-      </form>
+      </div>
     </div>
   );
 };

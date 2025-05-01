@@ -1,7 +1,9 @@
+// src/pages/PatientUpload.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import '../styles/pages/PatientUpload.css';
 
 const PatientUpload = () => {
   const [files, setFiles] = useState({
@@ -82,145 +84,144 @@ const PatientUpload = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center mb-6">
-        <Link to="/patient/dashboard" className="text-blue-500 mr-4">
-          &larr; Back to Dashboard
+    <div className="upload-container">
+      <div className="upload-header">
+        <Link to="/patient/dashboard" className="back-link">
+          ← Back to Dashboard
         </Link>
-        <h1 className="text-3xl font-bold">Upload Oral Images</h1>
+        <h1 className="upload-title">Upload Oral Images</h1>
       </div>
       
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="alert alert-error">
           {error}
         </div>
       )}
       
       {success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div className="alert alert-success">
           {success}
         </div>
       )}
       
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Instructions</h2>
-          <p className="text-gray-700">
+      <div className="upload-card">
+        <div className="instruction-section">
+          <h2 className="section-title">Instructions</h2>
+          <p className="upload-instructions">
             Please upload three clear images of your mouth in the following positions:
           </p>
-          <ol className="list-decimal list-inside mt-2 text-gray-700">
+          <ol className="instruction-list">
             <li>Left side profile (cheek side)</li>
             <li>Front view (showing front teeth)</li>
             <li>Right side profile (cheek side)</li>
           </ol>
-          <p className="mt-2 text-gray-700">
+          <p className="upload-instructions">
             For best results, please ensure:
           </p>
-          <ul className="list-disc list-inside mt-2 text-gray-700">
+          <ul className="tips-list">
             <li>Good lighting</li>
             <li>Clear focus on the teeth and gums</li>
             <li>Mouth is open enough to see teeth and gums clearly</li>
           </ul>
         </div>
         
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <form onSubmit={handleSubmit} className="upload-form">
+          <div className="uploads-grid">
             {/* Left Profile Image */}
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold mb-2">Left Side Profile</h3>
-              <div className="aspect-w-4 aspect-h-3 bg-gray-100 mb-3 rounded">
+            <div className="upload-box">
+              <h3 className="upload-box-title">Left Side Profile</h3>
+              <div className="upload-preview">
                 {previews.leftProfileImage ? (
-                  <img
-                    src={previews.leftProfileImage}
-                    alt="Left profile preview"
-                    className="rounded object-cover"
-                  />
+                  <>
+                    <img
+                      src={previews.leftProfileImage}
+                      alt="Left profile preview"
+                    />
+                  </>
                 ) : (
-                  <div className="flex items-center justify-center text-gray-400">
+                  <div className="no-image">
                     No image selected
                   </div>
                 )}
               </div>
-              <input
-                type="file"
-                name="leftProfileImage"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
-              />
+              <div className={`file-input-wrapper ${files.leftProfileImage ? 'has-file' : ''}`}>
+                <input
+                  type="file"
+                  name="leftProfileImage"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file-input"
+                />
+                <div className="file-input-button">
+                  {files.leftProfileImage ? 'Change Image' : 'Select Image'}
+                </div>
+              </div>
             </div>
             
             {/* Frontal Image */}
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold mb-2">Front View</h3>
-              <div className="aspect-w-4 aspect-h-3 bg-gray-100 mb-3 rounded">
+            <div className="upload-box">
+              <h3 className="upload-box-title">Front View</h3>
+              <div className="upload-preview">
                 {previews.frontalImage ? (
                   <img
                     src={previews.frontalImage}
                     alt="Front view preview"
-                    className="rounded object-cover"
                   />
                 ) : (
-                  <div className="flex items-center justify-center text-gray-400">
+                  <div className="no-image">
                     No image selected
                   </div>
                 )}
               </div>
-              <input
-                type="file"
-                name="frontalImage"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
-              />
+              <div className={`file-input-wrapper ${files.frontalImage ? 'has-file' : ''}`}>
+                <input
+                  type="file"
+                  name="frontalImage"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file-input"
+                />
+                <div className="file-input-button">
+                  {files.frontalImage ? 'Change Image' : 'Select Image'}
+                </div>
+              </div>
             </div>
             
             {/* Right Profile Image */}
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold mb-2">Right Side Profile</h3>
-              <div className="aspect-w-4 aspect-h-3 bg-gray-100 mb-3 rounded">
+            <div className="upload-box">
+              <h3 className="upload-box-title">Right Side Profile</h3>
+              <div className="upload-preview">
                 {previews.rightProfileImage ? (
                   <img
                     src={previews.rightProfileImage}
                     alt="Right profile preview"
-                    className="rounded object-cover"
                   />
                 ) : (
-                  <div className="flex items-center justify-center text-gray-400">
+                  <div className="no-image">
                     No image selected
                   </div>
                 )}
               </div>
-              <input
-                type="file"
-                name="rightProfileImage"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
-              />
+              <div className={`file-input-wrapper ${files.rightProfileImage ? 'has-file' : ''}`}>
+                <input
+                  type="file"
+                  name="rightProfileImage"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file-input"
+                />
+                <div className="file-input-button">
+                  {files.rightProfileImage ? 'Change Image' : 'Select Image'}
+                </div>
+              </div>
             </div>
           </div>
           
-          <div className="flex justify-end">
+          <div className="form-actions">
             <button
               type="submit"
               disabled={loading}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded disabled:bg-gray-400"
+              className="submit-button"
             >
               {loading ? 'Uploading...' : 'Upload Images'}
             </button>

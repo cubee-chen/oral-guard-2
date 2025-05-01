@@ -116,7 +116,7 @@ const PatientRecordChart = ({ recordData }) => {
   };
 
   return (
-    <div className="chart-container">
+    <div className="chart-container chart-appear">
       <Line data={data} options={options} />
     </div>
   );

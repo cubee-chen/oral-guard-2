@@ -1,9 +1,11 @@
+// src/pages/PatientDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PatientRecordChart from '../components/common/PatientRecordChart';
 import UploadHistory from '../components/patient/UploadHistory';
+import '../styles/pages/PatientDashboard.css';
 
 const PatientDashboard = () => {
   const [profile, setProfile] = useState(null);
@@ -60,55 +62,61 @@ const PatientDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Patient Dashboard</h1>
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">Patient Dashboard</h1>
       
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="alert alert-error">
           {error}
         </div>
       )}
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">       
-          <div className="mt-6">
-            <Link 
-              to="/patient/upload"
-              className="block w-full bg-blue-500 hover:bg-blue-600 text-white text-center px-4 py-2 rounded"
-            >
-              Upload New Images
-            </Link>
-          </div>
+      <div className="welcome-card">
+        <div className="welcome-header">
+          <h2 className="welcome-title">Welcome, {profile?.firstName}</h2>
+          <Link 
+            to="/patient/upload"
+            className="upload-button"
+          >
+            Upload New Images
+          </Link>
         </div>
-        
-        {/* Oral Health Record Chart */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Oral Health Status</h2>
-          {chartData ? (
-            <PatientRecordChart recordData={chartData} />
-          ) : (
-            <div className="bg-gray-100 p-6 rounded text-center">
-              <p className="text-gray-500">
-                No data available yet. Upload your first set of images to begin tracking.
-              </p>
-            </div>
-          )}
-        </div>
-        
-        {/* Upload History */}
-        <div className="lg:col-span-3 bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Upload History</h2>
-          {uploads && uploads.length > 0 ? (
-            <UploadHistory uploads={uploads} />
-          ) : (
-            <div className="bg-gray-100 p-6 rounded text-center">
-              <p className="text-gray-500">
-                No uploads yet. Upload your first set of images to begin.
-              </p>
-            </div>
-          )}
-        </div>
+        <p className="welcome-message">
+          Track your oral health progress and get professional feedback from your dentist.
+        </p>
       </div>
-  )
+        
+      {/* Oral Health Record Chart */}
+      <div className="health-metrics">
+        <div className="metrics-header">
+          <h2 className="metrics-title">Oral Health Status</h2>
+        </div>
+        {chartData ? (
+          <PatientRecordChart recordData={chartData} />
+        ) : (
+          <div className="no-data-message">
+            <p>
+              No data available yet. Upload your first set of images to begin tracking.
+            </p>
+          </div>
+        )}
+      </div>
+        
+      {/* Upload History */}
+      <div className="history-section">
+        <h2 className="history-header">Upload History</h2>
+        {uploads && uploads.length > 0 ? (
+          <UploadHistory uploads={uploads} />
+        ) : (
+          <div className="no-data-message">
+            <p>
+              No uploads yet. Upload your first set of images to begin.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default PatientDashboard;

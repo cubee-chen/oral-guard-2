@@ -1,28 +1,28 @@
+// src/components/dentist/PatientList.jsx
 import React from 'react';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import '../../styles/pages/DentistDashboard.css'; // Using the dashboard style since it contains patient list styles
 
 const PatientList = ({ patients, selectedPatient, onRemovePatient }) => (
-  <div className="bg-white rounded-lg shadow overflow-hidden">
+  <div className="patient-list-container">
     {patients.length === 0 ? (
-      <div className="p-4 text-center text-gray-500">No patients available.</div>
+      <div className="patient-list-empty">No patients available.</div>
     ) : (
-      <ul className="divide-y divide-gray-200">
+      <ul className="patient-list">
         {patients.map((p) => (
-          <li key={p._id} className="p-0">
+          <li key={p._id} className="patient-list-item">
             <Link
               to={`/dentist/patients/${p._id}`}
-              className={`flex justify-between items-center p-4 hover:bg-gray-50 ${
-                selectedPatient?._id === p._id ? 'bg-blue-50' : ''
-              }`}
+              className={`patient-link ${selectedPatient?._id === p._id ? 'active' : ''}`}
             >
-              <div>
-                <h3 className="font-medium">
+              <div className="patient-info">
+                <h3 className="patient-name">
                   {p.firstName} {p.lastName}
                 </h3>
-                <p className="text-sm text-gray-500">{p.email}</p>
+                <p className="patient-email">{p.email}</p>
               </div>
 
-              {/* “Remove” button needs to stop link navigation */}
+              {/* "Remove" button needs to stop link navigation */}
               <button
                 onClick={(e) => {
                   e.preventDefault();           // block <Link> navigation
@@ -31,7 +31,7 @@ const PatientList = ({ patients, selectedPatient, onRemovePatient }) => (
                     onRemovePatient(p._id);
                   }
                 }}
-                className="text-red-500 hover:text-red-700"
+                className="remove-patient-btn"
               >
                 Remove
               </button>

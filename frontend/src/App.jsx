@@ -13,6 +13,7 @@ import Navbar from './components/common/Navbar';
 import PatientDetailsPage from './pages/PatientDetailsPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import './styles/index.css';
 
 // Protected route component
 const ProtectedRoute = ({ children, requiredRole }) => {

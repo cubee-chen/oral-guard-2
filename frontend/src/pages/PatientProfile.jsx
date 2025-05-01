@@ -1,13 +1,15 @@
+// src/pages/PatientProfile.jsx
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import '../styles/pages/PatientProfile.css';
 
 const PatientProfile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(null);
-  const navigate  = useNavigate();
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -24,32 +26,52 @@ const PatientProfile = () => {
   }, [navigate]);
 
   if (loading) return <LoadingSpinner />;
-  if (error)   return <p className="text-red-600">{error}</p>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link to="/patient/dashboard" className="text-blue-600 hover:underline mb-6 inline-block">
+    <div className="profile-container">
+      <Link to="/patient/dashboard" className="back-link">
         ← Back to dashboard
       </Link>
 
-      <h1 className="text-3xl font-bold mb-6">My Information</h1>
+      <h1 className="profile-title">My Information</h1>
 
-      <div className="bg-white rounded-lg shadow p-6 max-w-lg">
-        <p className="mb-2"><span className="font-semibold">Name:</span> {profile.firstName} {profile.lastName}</p>
-        <p className="mb-2"><span className="font-semibold">Email:</span> {profile.email}</p>
-        {profile.dateOfBirth && (
-          <p className="mb-2"><span className="font-semibold">Date of Birth:</span> {new Date(profile.dateOfBirth).toLocaleDateString()}</p>
-        )}
+      <div className="profile-card">
+        <div className="profile-section">
+          <div className="profile-info">
+            <div className="info-group">
+              <p className="info-label">Name:</p>
+              <p className="info-value">{profile.firstName} {profile.lastName}</p>
+            </div>
+            <div className="info-group">
+              <p className="info-label">Email:</p>
+              <p className="info-value">{profile.email}</p>
+            </div>
+            {profile.dateOfBirth && (
+              <div className="info-group">
+                <p className="info-label">Date of Birth:</p>
+                <p className="info-value">{new Date(profile.dateOfBirth).toLocaleDateString()}</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {profile.dentist && (
-        <div className="bg-white rounded-lg shadow p-6 max-w-lg mt-6">
-          <h2 className="text-xl font-semibold mb-4">My Dentist</h2>
-          <p>Dr. {profile.dentist.firstName} {profile.dentist.lastName}</p>
-          <p className="text-sm text-gray-600">{profile.dentist.email}</p>
-          {profile.dentist.specialization && (
-            <p className="text-sm text-gray-600">Specialization: {profile.dentist.specialization}</p>
-          )}
+        <div className="dentist-card">
+          <h2 className="section-title">My Dentist</h2>
+          <div className="dentist-info">
+            <div className="dentist-avatar">
+              {profile.dentist.firstName[0]}
+            </div>
+            <div className="dentist-details">
+              <p className="dentist-name">Dr. {profile.dentist.firstName} {profile.dentist.lastName}</p>
+              <p className="dentist-email">{profile.dentist.email}</p>
+              {profile.dentist.specialization && (
+                <p className="dentist-specialty">Specialization: {profile.dentist.specialization}</p>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

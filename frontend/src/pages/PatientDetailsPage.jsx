@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import PatientDetails from '../components/dentist/PatientDetails';
+import '../styles/pages/PatientDetailsPage.css';
 
 const PatientDetailsPage = () => {
   const { patientId } = useParams();
-  const navigate       = useNavigate();
+  const navigate = useNavigate();
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -26,13 +27,13 @@ const PatientDetailsPage = () => {
   }, [patientId]);
 
   if (loading) return <LoadingSpinner />;
-  if (error)   return <p className="text-red-600">{error}</p>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="patient-details-container">
       <button
         onClick={() => navigate(-1)}
-        className="mb-6 text-blue-600 hover:underline"
+        className="back-button"
       >
         ← Back to list
       </button>
