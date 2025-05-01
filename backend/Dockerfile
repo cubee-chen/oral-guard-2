@@ -1,35 +1,24 @@
-FROM node:20
+FROM node:20-bookworm
 
 WORKDIR /app
+
+# (only needed if you want to build from source—otherwise you can drop it)
+# RUN apt-get update \
+#  && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential python3 pkg-config libvips-dev \
+#  && rm -rf /var/lib/apt/lists/*
+
+# If you WANT the prebuilt binaries, remove/comment this out:
+#ENV SHARP_SKIP_DOWNLOAD=true
+
 COPY package*.json ./
-RUN npm ci
+
+# install all prod deps (including sharp)
+RUN npm ci --omit=dev \
+    && npm ls sharp
+
+# dev‐helper
 RUN npm install -g nodemon
+
 COPY . .
-RUN mkdir -p models
 
-EXPOSE 5000
-
-CMD ["nodemon", "app.js"]
-
-
-# # Stage 1: Build Frontend
-# FROM node:20 as frontend-builder
-# WORKDIR /MyWork
-# COPY frontend/package.json frontend/yarn.lock ./ 
-# WORKDIR /MyWork/frontend
-# RUN yarn install
-# COPY frontend/ .
-# RUN yarn build
-# # The build output will be in /app/frontend/build (if using Option B)
-
-# # Stage 2: Build Backend
-# FROM node:20
-# WORKDIR /MyWork
-# COPY package*.json ./
-# RUN npm install -g nodemon
-# # Copy backend source code
-# COPY backend/ .
-# # Copy the built frontend into backend/build
-# COPY --from=frontend-builder /MyWork/frontend/build ./build
-# EXPOSE 5000
-# CMD ["nodemon", "app.js"]
+CMD ["npm", "run", "dev"]

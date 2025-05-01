@@ -1,3 +1,4 @@
+// backend/app.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -8,8 +9,8 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.route.js');
 const dentistRoutes = require('./routes/dentist.route.js');
 const patientRoutes = require('./routes/patient.route.js');
-
 const uploadRoutes = require('./routes/upload.route.js');
+const adminRoutes = require('./routes/admin.route.js'); // Add admin routes
 
 // Initialize app
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dentist', dentistRoutes);
 app.use('/api/patient', patientRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/admin', adminRoutes); // Add admin routes
 
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {

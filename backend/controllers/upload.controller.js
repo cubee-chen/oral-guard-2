@@ -1,10 +1,13 @@
+// backend/controllers/upload.controller.js
 const mongoose = require('mongoose');
 const multer = require('multer');
+const sharp = require('sharp'); // Add sharp for image optimization
 const { gridFSBucket } = require('../config/db');
 const Upload = require('../models/upload.model.js');
 const Record = require('../models/record.model.js');
 const mlService = require('../services/mlService');
 const { Readable } = require('stream');
+const path = require('path');
 
 // Set up multer storage
 const storage = multer.memoryStorage();
@@ -20,7 +23,78 @@ exports.uploadMiddleware = upload.fields([
   { name: 'rightProfileImage', maxCount: 1 }
 ]);
 
-// Process upload
+// Helper function to optimize image before saving to GridFS
+const optimizeImage = async (buffer, options = {}) => {
+  const {
+    width = 800,     // Max width (preserves aspect ratio)
+    quality = 80,    // JPEG quality (1-100)
+    format = 'jpeg'  // Output format
+  } = options;
+
+  try {
+    // Use sharp to resize and compress
+    return await sharp(buffer)
+      .resize({ width, withoutEnlargement: true }) // Resize only if larger than specified width
+      .toFormat(format, { quality })
+      .toBuffer();
+  } catch (error) {
+    console.error('Image optimization error:', error);
+    return buffer; // Return original buffer on error
+  }
+};
+
+// Improved function to save file to GridFS
+const saveFileToGridFS = async (file, patientId, fileName) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const bucket = gridFSBucket();
+      
+      // Get file extension
+      const fileExt = path.extname(file.originalname).toLowerCase();
+      const isImage = ['.jpg', '.jpeg', '.png', '.gif'].includes(fileExt);
+      
+      // Optimize image if it's a supported format
+      let buffer = file.buffer;
+      let contentType = file.mimetype;
+      
+      if (isImage) {
+        buffer = await optimizeImage(file.buffer);
+        contentType = 'image/jpeg'; // We convert to JPEG for consistency
+      }
+      
+      // Create readable stream from buffer
+      const readableStream = new Readable();
+      readableStream.push(buffer);
+      readableStream.push(null);
+      
+      // Generate file name if not provided
+      const finalFileName = fileName || `${Date.now()}_${file.originalname}`;
+      
+      // Open upload stream with optimized chunk size
+      const uploadStream = bucket.openUploadStream(finalFileName, {
+        contentType: contentType,
+        chunkSizeBytes: 261120, // 255KB chunk size
+        metadata: {
+          patientId,
+          uploadDate: new Date(),
+          originalName: file.originalname,
+          fileSize: buffer.length
+        }
+      });
+      
+      // Pipe optimized buffer to GridFS
+      readableStream.pipe(uploadStream);
+      
+      // Handle events
+      uploadStream.on('error', reject);
+      uploadStream.on('finish', () => resolve(uploadStream.id));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// Process upload with optimizations
 exports.processUpload = async (req, res, next) => {
   try {
     // Verify user is a patient
@@ -33,40 +107,12 @@ exports.processUpload = async (req, res, next) => {
       return res.status(400).json({ message: 'All three images are required (left profile, frontal, right profile)' });
     }
     
-    // Store files in GridFS
-    const bucket = gridFSBucket();
-    
-    // Function to save file to GridFS
-    const saveFileToGridFS = async (file) => {
-      return new Promise((resolve, reject) => {
-        const readableStream = new Readable();
-        readableStream.push(file.buffer);
-        readableStream.push(null);
-        
-        const uploadStream = bucket.openUploadStream(file.originalname, {
-          contentType: file.mimetype,
-          metadata: {
-            patientId: req.user.id,
-            uploadDate: new Date()
-          }
-        });
-        
-        readableStream.pipe(uploadStream);
-        
-        uploadStream.on('error', (error) => {
-          reject(error);
-        });
-        
-        uploadStream.on('finish', () => {
-          resolve(uploadStream.id);
-        });
-      });
-    };
-    
-    // Save all three images
-    const leftProfileImageId = await saveFileToGridFS(req.files.leftProfileImage[0]);
-    const frontalImageId = await saveFileToGridFS(req.files.frontalImage[0]);
-    const rightProfileImageId = await saveFileToGridFS(req.files.rightProfileImage[0]);
+    // Process and save all three images in parallel
+    const [leftProfileImageId, frontalImageId, rightProfileImageId] = await Promise.all([
+      saveFileToGridFS(req.files.leftProfileImage[0], req.user.id, `left_${Date.now()}.jpg`),
+      saveFileToGridFS(req.files.frontalImage[0], req.user.id, `front_${Date.now()}.jpg`),
+      saveFileToGridFS(req.files.rightProfileImage[0], req.user.id, `right_${Date.now()}.jpg`)
+    ]);
     
     // Create new upload record
     const newUpload = new Upload({
@@ -98,18 +144,20 @@ exports.processUpload = async (req, res, next) => {
   }
 };
 
-// Get image by ID
+// Get image by ID with improved caching
 exports.getImage = async (req, res, next) => {
   try {
     const { imageId } = req.params;
     
-    // authentication already handled by ensureAuthenticated middleware
+    // Authentication already handled by ensureAuthenticated middleware
     
     // Get the image file
     const bucket = gridFSBucket();
     
     // Check if file exists
-    const file = await mongoose.connection.db.collection('uploads.files').findOne({ _id: new mongoose.Types.ObjectId(imageId) });
+    const file = await mongoose.connection.db.collection('uploads.files').findOne({ 
+      _id: new mongoose.Types.ObjectId(imageId) 
+    });
     
     if (!file) {
       return res.status(404).json({ message: 'Image not found' });
@@ -136,8 +184,22 @@ exports.getImage = async (req, res, next) => {
       }
     }
     
-    // Set content type
-    res.set('Content-Type', file.contentType);
+    // Set content type and caching headers
+    res.set({
+      'Content-Type': file.contentType,
+      'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
+      'ETag': `"${file._id}"`,
+      'Last-Modified': file.uploadDate.toUTCString()
+    });
+    
+    // Support conditional requests
+    const ifNoneMatch = req.headers['if-none-match'];
+    const ifModifiedSince = req.headers['if-modified-since'];
+    
+    if (ifNoneMatch === `"${file._id}"` || 
+        (ifModifiedSince && new Date(ifModifiedSince) >= file.uploadDate)) {
+      return res.status(304).end(); // Not Modified
+    }
     
     // Create download stream
     const downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(imageId));
@@ -156,7 +218,7 @@ exports.getUploadStatus = async (req, res, next) => {
     const { uploadId } = req.params;
     
     // Verify user is authenticated
-    if (!req.isAuthenticated()) {
+    if (!req.isAuthenticated && !req.user) {
       return res.status(401).json({ message: 'Authentication required' });
     }
     

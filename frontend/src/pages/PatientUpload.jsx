@@ -5,6 +5,49 @@ import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import '../styles/pages/PatientUpload.css';
 
+// Add image compression utility
+const compressImage = (file, maxWidth = 800, quality = 0.8) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Scale down if larger than maxWidth
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Draw and compress
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert to Blob
+        canvas.toBlob((blob) => {
+          // Create a new file with the blob
+          const compressedFile = new File([blob], file.name, {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          });
+          resolve(compressedFile);
+        }, 'image/jpeg', quality);
+      };
+    };
+  });
+};
+
+
+
 const PatientUpload = () => {
   const [files, setFiles] = useState({
     leftProfileImage: null,
@@ -22,23 +65,34 @@ const PatientUpload = () => {
   const navigate = useNavigate();
 
   // Handle file input changes
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const { name, files: selectedFiles } = e.target;
     
     if (selectedFiles && selectedFiles[0]) {
-      // Create file URL for preview
-      const fileUrl = URL.createObjectURL(selectedFiles[0]);
-      
-      // Update files and previews
-      setFiles(prevFiles => ({
-        ...prevFiles,
-        [name]: selectedFiles[0]
-      }));
-      
-      setPreviews(prevPreviews => ({
-        ...prevPreviews,
-        [name]: fileUrl
-      }));
+      try {
+        // Create file URL for preview immediately
+        const fileUrl = URL.createObjectURL(selectedFiles[0]);
+        setPreviews(prevPreviews => ({
+          ...prevPreviews,
+          [name]: fileUrl
+        }));
+        
+        // Compress the image
+        const compressedFile = await compressImage(selectedFiles[0]);
+        
+        // Update files state with compressed version
+        setFiles(prevFiles => ({
+          ...prevFiles,
+          [name]: compressedFile
+        }));
+      } catch (error) {
+        console.error('Error compressing image:', error);
+        // Fallback to original file if compression fails
+        setFiles(prevFiles => ({
+          ...prevFiles,
+          [name]: selectedFiles[0]
+        }));
+      }
     }
   };
 
@@ -82,6 +136,8 @@ const PatientUpload = () => {
       setLoading(false);
     }
   };
+
+  
 
   return (
     <div className="upload-container">

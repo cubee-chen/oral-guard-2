@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PatientRecordChart from '../common/PatientRecordChart';
 import { API_HOST } from '../../utils/apiHost';
 import '../../styles/pages/PatientDetailsPage.css';
+import LazyImage from '../common/LazyImage';
 
 const PatientDetails = ({ patient, uploads, record, onAddComment }) => {
   const [selectedUpload, setSelectedUpload] = useState(uploads.length > 0 ? uploads[0] : null);
@@ -85,27 +86,30 @@ const PatientDetails = ({ patient, uploads, record, onAddComment }) => {
                   <div className="image-container">
                     <h4 className="image-title">Left Profile</h4>
                     <div className="image-wrapper">
-                      <img
+                      <LazyImage
                         src={getImageUrl(selectedUpload.processedLeftImage || selectedUpload.leftProfileImage)}
                         alt="Left profile"
+                        className="patient-image"
                       />
                     </div>
                   </div>
                   <div className="image-container">
                     <h4 className="image-title">Front View</h4>
                     <div className="image-wrapper">
-                      <img
+                      <LazyImage
                         src={getImageUrl(selectedUpload.processedFrontalImage || selectedUpload.frontalImage)}
                         alt="Front view"
+                        className="patient-image"
                       />
                     </div>
                   </div>
                   <div className="image-container">
                     <h4 className="image-title">Right Profile</h4>
                     <div className="image-wrapper">
-                      <img
+                      <LazyImage
                         src={getImageUrl(selectedUpload.processedRightImage || selectedUpload.rightProfileImage)}
                         alt="Right profile"
+                        className="patient-image"
                       />
                     </div>
                   </div>
