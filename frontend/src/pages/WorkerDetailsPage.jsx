@@ -24,7 +24,7 @@ const WorkerDetailsPage = () => {
       try {
         setLoading(true);
         
-        // Get worker details (using the first patient's data since we don't have a dedicated endpoint)
+        // Get worker details (using the workers endpoint)
         const workersResponse = await api.get('/api/facility/workers');
         const workerData = workersResponse.data.workers.find(w => w._id === workerId);
         

@@ -32,11 +32,11 @@ const AIRecommendations = ({ uploadId }) => {
     return (
       <div className="ai-recommendations-container loading">
         <h4 className="ai-recommendations-title">
-          <i className="fas fa-robot"></i> AI Dental Assistant
+          <i className="fas fa-robot"></i> AI Oral Care Assistant
         </h4>
         <div className="ai-recommendations-loading">
           <LoadingSpinner />
-          <p>Analyzing your dental image...</p>
+          <p>Analyzing oral health data...</p>
         </div>
       </div>
     );
@@ -46,7 +46,7 @@ const AIRecommendations = ({ uploadId }) => {
     return (
       <div className="ai-recommendations-container error">
         <h4 className="ai-recommendations-title">
-          <i className="fas fa-robot"></i> AI Dental Assistant
+          <i className="fas fa-robot"></i> AI Oral Care Assistant
         </h4>
         <div className="ai-recommendations-error">
           <p>{error}</p>
@@ -62,12 +62,12 @@ const AIRecommendations = ({ uploadId }) => {
   return (
     <div className="ai-recommendations-container">
       <h4 className="ai-recommendations-title">
-        <i className="fas fa-robot"></i> AI Dental Assistant
+        <i className="fas fa-robot"></i> AI Oral Care Recommendations
       </h4>
       <div className="ai-recommendations-content">
         <p>{recommendations}</p>
         <div className="ai-recommendations-footer">
-          <small>This is an AI-generated recommendation and should not replace professional dental advice.</small>
+          <small>This is an AI-generated recommendation and should not replace professional healthcare advice.</small>
         </div>
       </div>
     </div>

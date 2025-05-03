@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import '../../styles/components/Navbar.css';
 
 const Navbar = () => {
-  const { user, logout, isPatient, isDentist } = useAuth();
+  const { user, logout, isPatient, isWorker, isFacility } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <h1>Dental Care</h1>
+        <h1>OralGuard</h1>
       </div>
       
       {user && (
@@ -23,21 +23,21 @@ const Navbar = () => {
           {isPatient && (
             <>
               <Link to="/patient/dashboard" className="nav-link">Dashboard</Link>
-              <Link to="/patient/upload" className="nav-link">Upload Images</Link>
+              <Link to="/patient/profile" className="nav-link">My Profile</Link>
             </>
           )}
           
-          {isDentist && (
-            <Link to="/dentist/dashboard" className="nav-link">Dashboard</Link>
+          {isWorker && (
+            <Link to="/worker/dashboard" className="nav-link">Dashboard</Link>
+          )}
+          
+          {isFacility && (
+            <Link to="/facility/dashboard" className="nav-link">Dashboard</Link>
           )}
           
           <div className="user-info">
-            {/* click-able name */}
-            {isPatient ? (
-              <Link to="/patient/profile" className="user-name">{user.firstName} {user.lastName}</Link>
-            ) : (
-              <span className="user-name">{user.firstName} {user.lastName}</span>
-            )}
+            <span className="user-name">{user.firstName} {user.lastName}</span>
+            <span className="user-role">{user.role}</span>
             <button onClick={handleLogout} className="logout-btn">Logout</button>
           </div>
         </div>

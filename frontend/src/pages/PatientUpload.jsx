@@ -1,6 +1,6 @@
 // src/pages/PatientUpload.jsx
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import '../styles/pages/PatientUpload.css';
@@ -46,9 +46,9 @@ const compressImage = (file, maxWidth = 800, quality = 0.8) => {
   });
 };
 
-
-
 const PatientUpload = () => {
+  const { patientId } = useParams();
+  const [patientInfo, setPatientInfo] = useState(null);
   const [files, setFiles] = useState({
     leftProfileImage: null,
     frontalImage: null,
@@ -64,6 +64,24 @@ const PatientUpload = () => {
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch patient info
+  useEffect(() => {
+    const fetchPatientInfo = async () => {
+      try {
+        const response = await api.get(`/api/worker/patients/${patientId}`);
+        setPatientInfo(response.data.patient);
+      } catch (err) {
+        setError('Failed to load patient information.');
+        
+        if (err.response && err.response.status === 401) {
+          navigate('/login');
+        }
+      }
+    };
+    
+    fetchPatientInfo();
+  }, [patientId, navigate]);
+  
   // Handle file input changes
   const handleFileChange = async (e) => {
     const { name, files: selectedFiles } = e.target;
@@ -117,7 +135,7 @@ const PatientUpload = () => {
       formData.append('rightProfileImage', files.rightProfileImage);
       
       // Submit to API
-      const response = await api.post('/api/upload', formData, {
+      const response = await api.post(`/api/worker/patients/${patientId}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -126,9 +144,9 @@ const PatientUpload = () => {
       setSuccess('Images uploaded successfully! Processing will begin shortly.');
       setLoading(false);
       
-      // Redirect to dashboard after a short delay
+      // Redirect to patient details after a short delay
       setTimeout(() => {
-        navigate('/patient/dashboard');
+        navigate(`/worker/patients/${patientId}`);
       }, 3000);
       
     } catch (err) {
@@ -137,15 +155,15 @@ const PatientUpload = () => {
     }
   };
 
-  
-
   return (
     <div className="upload-container">
       <div className="upload-header">
-        <Link to="/patient/dashboard" className="back-link">
-          ← Back to Dashboard
+        <Link to={`/worker/patients/${patientId}`} className="back-link">
+          ← Back to Patient Details
         </Link>
-        <h1 className="upload-title">Upload Oral Images</h1>
+        <h1 className="upload-title">
+          Upload Oral Images for {patientInfo ? `${patientInfo.firstName} ${patientInfo.lastName}` : 'Patient'}
+        </h1>
       </div>
       
       {error && (
@@ -164,7 +182,7 @@ const PatientUpload = () => {
         <div className="instruction-section">
           <h2 className="section-title">Instructions</h2>
           <p className="upload-instructions">
-            Please upload three clear images of your mouth in the following positions:
+            Please upload three clear images of the patient's mouth in the following positions:
           </p>
           <ol className="instruction-list">
             <li>Left side profile (cheek side)</li>

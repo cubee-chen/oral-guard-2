@@ -41,8 +41,13 @@ const Register = () => {
       return false;
     }
     
-    if (formData.role === 'dentist' && (!formData.specialization || !formData.licenseNumber)) {
-      setFormError('Specialization and license number are required for dentists');
+    if (formData.role === 'worker' && (!formData.specialization || !formData.licenseNumber)) {
+      setFormError('Specialization and license number are required for care workers');
+      return false;
+    }
+    
+    if (formData.role === 'facility' && !formData.licenseNumber) {
+      setFormError('License or registration number is required for facilities');
       return false;
     }
     
@@ -85,7 +90,7 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card register-card">
         <h2 className="auth-title">Create an Account</h2>
-        <p className="auth-subtitle">Join Dental Care today</p>
+        <p className="auth-subtitle">Join OralGuard today</p>
         
         {formError && <div className="error-message">{formError}</div>}
         {registrationSuccess && (
@@ -180,11 +185,12 @@ const Register = () => {
               required
             >
               <option value="patient">Patient</option>
-              <option value="dentist">Dentist</option>
+              <option value="worker">Care Worker</option>
+              <option value="facility">Care Facility</option>
             </select>
           </div>
           
-          {formData.role === 'dentist' && (
+          {formData.role === 'worker' && (
             <>
               <div className="form-group">
                 <label htmlFor="specialization">Specialization*</label>
@@ -194,26 +200,42 @@ const Register = () => {
                   name="specialization"
                   value={formData.specialization}
                   onChange={handleChange}
-                  placeholder="E.g., Orthodontics, General Dentistry"
+                  placeholder="E.g., Oral Care, Geriatric Care"
                   disabled={isSubmitting}
                   required
                 />
               </div>
               
               <div className="form-group">
-                <label htmlFor="licenseNumber">License Number*</label>
+                <label htmlFor="licenseNumber">License/Certificate Number*</label>
                 <input
                   type="text"
                   id="licenseNumber"
                   name="licenseNumber"
                   value={formData.licenseNumber}
                   onChange={handleChange}
-                  placeholder="Enter your license number"
+                  placeholder="Enter your license or certification number"
                   disabled={isSubmitting}
                   required
                 />
               </div>
             </>
+          )}
+          
+          {formData.role === 'facility' && (
+            <div className="form-group">
+              <label htmlFor="licenseNumber">Facility Registration Number*</label>
+              <input
+                type="text"
+                id="licenseNumber"
+                name="licenseNumber"
+                value={formData.licenseNumber}
+                onChange={handleChange}
+                placeholder="Enter your facility registration number"
+                disabled={isSubmitting}
+                required
+              />
+            </div>
           )}
           
           {formData.role === 'patient' && (
