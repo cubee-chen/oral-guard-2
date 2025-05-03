@@ -1,0 +1,92 @@
+/* src/styles/components/AIRecommendations.css */
+.ai-recommendations-container {
+    background-color: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .ai-recommendations-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #0ea5e9, #38bdf8);
+  }
+  
+  .ai-recommendations-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: #0369a1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .ai-recommendations-title i {
+    font-size: 1.25rem;
+  }
+  
+  .ai-recommendations-content {
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+  
+  .ai-recommendations-footer {
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    border-top: 1px solid #bae6fd;
+    padding-top: 0.5rem;
+  }
+  
+  .ai-recommendations-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0;
+    gap: 1rem;
+    color: var(--text-secondary);
+  }
+  
+  .ai-recommendations-error {
+    color: var(--danger);
+    font-style: italic;
+  }
+  
+  /* Animation effect */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.2);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(14, 165, 233, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
+    }
+  }
+  
+  .ai-recommendations-container.loading {
+    animation: pulse 2s infinite;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .ai-recommendations-container {
+      padding: 1rem;
+    }
+    
+    .ai-recommendations-title {
+      font-size: 1rem;
+    }
+  }

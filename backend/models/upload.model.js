@@ -1,7 +1,21 @@
+// models/upload.model.js
 const mongoose = require('mongoose');
 
 const UploadSchema = new mongoose.Schema({
+  // Patient whose oral images were uploaded
   patient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  // Worker who uploaded the images
+  worker: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  // Facility that manages the worker
+  facility: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -23,7 +37,7 @@ const UploadSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
-  // ML processing results
+  // ML processing results (images with bounding boxes)
   processedLeftImage: {
     type: mongoose.Schema.Types.ObjectId,
     default: null
@@ -47,34 +61,22 @@ const UploadSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  // ML analysis results
-  analysisResults: {
-    plaqueCoverage: {
-      type: Number,
-      default: null
-    },
-    gingivalInflammation: {
-      type: Number,
-      default: null
-    },
-    tartar: {
-      type: Number,
-      default: null
-    },
-    additionalMetrics: {
-      type: Map,
-      of: mongoose.Schema.Types.Mixed
-    }
+  // AI analysis results
+  hygieneScore: {
+    type: Number,
+    min: 0,
+    max: 100,
+    default: null
   },
-  // Indicates if dentist has reviewed this upload
-  reviewedByDentist: {
-    type: Boolean,
-    default: false
+  // AI-generated comments about oral health
+  aiComments: {
+    type: String,
+    default: null
   },
-  // Reference to comment if exists
-  comment: {
+  // Associated duty record
+  duty: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Comment',
+    ref: 'Duty',
     default: null
   }
 });

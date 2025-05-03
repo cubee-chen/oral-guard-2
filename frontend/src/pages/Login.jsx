@@ -1,6 +1,6 @@
 // src/pages/Login.jsx
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import '../styles/pages/Auth.css';
@@ -13,13 +13,17 @@ const Login = () => {
   
   const { login, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Redirect if already logged in
+  // Redirect if already logged in, but exclude reset-password path
   useEffect(() => {
-    if (isAuthenticated) {
+    const fromResetPassword = location.state && location.state.fromResetPassword;
+    
+    // Only redirect if authenticated and not coming from reset password
+    if (isAuthenticated && !fromResetPassword) {
       navigate(user.role === 'dentist' ? '/dentist/dashboard' : '/patient/dashboard');
     }
-  }, [isAuthenticated, user, navigate])
+  }, [isAuthenticated, user, navigate, location]);
 
   if (isAuthenticated) return null;
 

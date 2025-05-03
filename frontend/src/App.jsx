@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import DentistDashboard from './pages/DentistDashboard';
-import AddNewPatient from './pages/AddNewPatient';
-import PatientDashboard from './pages/PatientDashboard';
+import FacilityDashboard from './pages/FacilityDashboard';
+import AddWorker from './pages/AddWorker';
+import WorkerDashboard from './pages/WorkerDashboard';
 import PatientUpload from './pages/PatientUpload';
 import PatientProfile from './pages/PatientProfile';
 import LoadingSpinner from './components/common/LoadingSpinner';
@@ -13,6 +13,9 @@ import Navbar from './components/common/Navbar';
 import PatientDetailsPage from './pages/PatientDetailsPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import WorkerDetailsPage from './pages/WorkerDetailsPage';
+import AddPatient from './pages/AddPatient';
+import PatientDashboard from './pages/PatientDashboard';
 import './styles/index.css';
 
 // Protected route component
@@ -28,9 +31,17 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   }
 
   if (requiredRole && user.role !== requiredRole) {
-    return user.role === 'dentist' 
-      ? <Navigate to="/dentist/dashboard" replace />
-      : <Navigate to="/patient/dashboard" replace />;
+    // Redirect based on user role
+    if (user.role === 'facility') {
+      return <Navigate to="/facility/dashboard" replace />;
+    } else if (user.role === 'worker') {
+      return <Navigate to="/worker/dashboard" replace />;
+    } else if (user.role === 'patient') {
+      return <Navigate to="/patient/dashboard" replace />;
+    } else {
+      // Default fallback
+      return <Navigate to="/login" replace />;
+    }
   }
 
   return children;
@@ -45,31 +56,66 @@ const AppRoutes = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       
-      {/* Dentist Routes */}
+      {/* Facility Routes */}
       <Route 
-        path="/dentist/dashboard" 
+        path="/facility/dashboard" 
         element={
-          <ProtectedRoute requiredRole="dentist">
-            <DentistDashboard />
+          <ProtectedRoute requiredRole="facility">
+            <FacilityDashboard />
           </ProtectedRoute>
         } 
       />
       <Route
-        path="/dentist/patients/:patientId"
+        path="/facility/workers/:workerId"
         element={
-          <ProtectedRoute requiredRole="dentist">
-            <PatientDetailsPage />
+          <ProtectedRoute requiredRole="facility">
+            <WorkerDetailsPage />
           </ProtectedRoute>
         }
       />
       <Route
-        path='/dentist/add-new-patient'
+        path='/facility/add-worker'
         element={
-          <ProtectedRoute requiredRole="dentist">
-            <AddNewPatient />
+          <ProtectedRoute requiredRole="facility">
+            <AddWorker />
           </ProtectedRoute>
         }
       />
+      <Route
+        path='/facility/workers/:workerId/add-patient'
+        element={
+          <ProtectedRoute requiredRole="facility">
+            <AddPatient />
+          </ProtectedRoute>
+        }
+      />
+      
+      {/* Worker Routes */}
+      <Route 
+        path="/worker/dashboard" 
+        element={
+          <ProtectedRoute requiredRole="worker">
+            <WorkerDashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route
+        path="/worker/patients/:patientId"
+        element={
+          <ProtectedRoute requiredRole="worker">
+            <PatientDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route 
+        path="/worker/patients/:patientId/upload" 
+        element={
+          <ProtectedRoute requiredRole="worker">
+            <PatientUpload />
+          </ProtectedRoute>
+        } 
+      />
+      
       {/* Patient Routes */}
       <Route 
         path="/patient/dashboard" 
@@ -86,14 +132,6 @@ const AppRoutes = () => {
             <PatientProfile />
           </ProtectedRoute>
         }
-      />
-      <Route 
-        path="/patient/upload" 
-        element={
-          <ProtectedRoute requiredRole="patient">
-            <PatientUpload />
-          </ProtectedRoute>
-        } 
       />
       
       {/* Catch-all route */}

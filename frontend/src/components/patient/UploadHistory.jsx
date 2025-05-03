@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_HOST } from '../../utils/apiHost';
 import '../../styles/pages/PatientDashboard.css';
+import AIRecommendations from '../common/AIRecommendations';
 
 const UploadHistory = ({ uploads }) => {
   const [selectedUpload, setSelectedUpload] = useState(uploads[0] || null);
@@ -198,6 +199,8 @@ const UploadHistory = ({ uploads }) => {
                   </p>
                 </div>
               </div>
+                {/* AI Recommendations */}
+                <AIRecommendations uploadId={selectedUpload._id} />
             </div>
           )}
           

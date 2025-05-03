@@ -1,4 +1,4 @@
-// src/context/AuthContext.js
+// src/context/AuthContext.jsx
 import { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
 
@@ -70,8 +70,10 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         isAuthenticated: !!user,
+        isFacility: user?.role === 'facility',
+        isWorker: user?.role === 'worker',
         isPatient: user?.role === 'patient',
-        isDentist: user?.role === 'dentist',
+        isAdmin: user?.role === 'admin',
       }}
     >
       {children}

@@ -1,3 +1,4 @@
+// models/user.model.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -28,10 +29,10 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['dentist', 'patient', 'admin'],
+    enum: ['facility', 'worker', 'patient', 'admin'],
     required: true
   },
-  // Fields specific to dentists
+  // Fields specific to workers (formerly dentists)
   specialization: {
     type: String,
     trim: true,
@@ -47,13 +48,24 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  // For patients, reference to their dentist
-  dentist: {
+  // For patients, reference to their care worker
+  worker: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     default: null
   },
-  // For dentists, array of patient IDs
+  // For workers, reference to their facility
+  facility: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  // For facilities, array of worker IDs
+  workers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  // For workers, array of patient IDs
   patients: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -83,7 +95,7 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-/** instance method：用來比對輸入密碼 */
+/** Instance method to compare passwords */
 UserSchema.methods.comparePassword = function (plain) {
   return bcrypt.compare(plain, this.password);
 };

@@ -7,10 +7,11 @@ const cookieParser = require('cookie-parser');
 
 // Import routes
 const authRoutes = require('./routes/auth.route.js');
-const dentistRoutes = require('./routes/dentist.route.js');
+const facilityRoutes = require('./routes/facility.route.js');
+const workerRoutes = require('./routes/worker.route.js');
 const patientRoutes = require('./routes/patient.route.js');
 const uploadRoutes = require('./routes/upload.route.js');
-const adminRoutes = require('./routes/admin.route.js'); // Add admin routes
+const adminRoutes = require('./routes/admin.route.js');
 
 // Initialize app
 const app = express();
@@ -30,14 +31,15 @@ app.use(cors({
 app.use(cookieParser());
 
 // Debugging line
-app.get('/', (req, res) => res.send('🏥 backend is alive'))
+app.get('/', (req, res) => res.send('🏥 OralGuard API is running'))
 
 // API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/dentist', dentistRoutes);
+app.use('/api/facility', facilityRoutes);
+app.use('/api/worker', workerRoutes);
 app.use('/api/patient', patientRoutes);
 app.use('/api/upload', uploadRoutes);
-app.use('/api/admin', adminRoutes); // Add admin routes
+app.use('/api/admin', adminRoutes);
 
 // Serve static files from React app in production
 if (process.env.NODE_ENV === 'production') {
