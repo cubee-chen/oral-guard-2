@@ -15,6 +15,10 @@ const FacilityDashboard = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+
+  // Debugging line
+  console.log('test');
+  
   // Fetch workers on component mount
   useEffect(() => {
     const fetchWorkers = async () => {
